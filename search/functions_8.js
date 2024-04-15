@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['reboot_209',['reboot',['../class_duck.html#a64f61f312f2e077477369750188bfccf',1,'Duck']]],
-  ['reconnectwifi_210',['reconnectWifi',['../class_duck.html#a7b6fc02f2c084790b0646d1772b89124',1,'Duck']]],
-  ['resetpacketindex_211',['resetPacketIndex',['../class_duck_lora.html#a1a5fac56f3a1c6df40bcdbb7346cc373',1,'DuckLora']]],
-  ['resettransmissionbuffer_212',['resetTransmissionBuffer',['../class_duck_lora.html#a755857e37d66d10e2c6f4460f461026d',1,'DuckLora']]],
-  ['restartduck_213',['restartDuck',['../namespaceduckesp.html#a1bccb912823b8261c7ef8559efc3d5ec',1,'duckesp']]],
-  ['run_214',['run',['../class_duck.html#ae563c92e38f7f99412eb4445f6429366',1,'Duck']]]
+  ['loadchannel_305',['loadChannel',['../class_duck_net.html#ae67d21661ff5a48777d902e1abf9f9f4',1,'DuckNet']]],
+  ['loadwificredentials_306',['loadWiFiCredentials',['../class_duck_net.html#a98508f1de7a2bf259d91d770b358f6ae',1,'DuckNet']]],
+  ['loadwifipassword_307',['loadWifiPassword',['../namespaceduckutils.html#a56ea08fb08a402d391f3582a309d8899',1,'duckutils']]],
+  ['loadwifissid_308',['loadWifiSsid',['../namespaceduckutils.html#a0a14835a59650aef58f9ffbd107586fe',1,'duckutils']]],
+  ['logiflowmemory_309',['logIfLowMemory',['../class_duck.html#a76ad584ab3b1eee157b9c2bbda491248',1,'Duck']]]
 ];

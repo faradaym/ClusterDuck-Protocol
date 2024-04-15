@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['onreceiveduckdata_432',['onReceiveDuckData',['../class_papa_duck.html#a9f3b2b5ebef77789b214372fe9e08600',1,'PapaDuck']]],
-  ['onreceiverssi_433',['onReceiveRssi',['../class_duck_detect.html#a4aebfa47f65fe594d25fc67e9624175d',1,'DuckDetect']]],
-  ['opentransportconnection_434',['openTransportConnection',['../class_e_s_p8266.html#aacde47356045ad6e0fae356284d1acb6',1,'ESP8266::openTransportConnection()'],['../class_transport_layer.html#a36b1ceebca3643fb475607d3d92f5d63',1,'TransportLayer::openTransportConnection()']]]
+  ['tostring_349',['toString',['../namespaceduckutils.html#a232773eaac919a424cf6c8737c6843f0',1,'duckutils']]],
+  ['touint32_350',['toUint32',['../namespaceduckutils.html#a3dc52038752191518492e540418c195b',1,'duckutils']]],
+  ['touppercase_351',['toUpperCase',['../namespaceduckutils.html#a0a51e5d45425646f2d70f63c3de51faa',1,'duckutils']]]
 ];

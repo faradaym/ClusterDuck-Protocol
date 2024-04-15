@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['onpacketreceived_206',['onPacketReceived',['../class_duck.html#ad727e3f8972a5fcf18c05f942741c841',1,'Duck']]]
+  ['handleotaupdate_301',['handleOtaUpdate',['../class_duck.html#ac9407d040d345391b1aecfb18404542f',1,'Duck']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['packet_160',['Packet',['../struct_packet.html',1,'']]]
+  ['loraconfigparams_227',['LoraConfigParams',['../struct_lora_config_params.html',1,'']]]
 ];

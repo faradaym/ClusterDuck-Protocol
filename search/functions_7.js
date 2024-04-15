@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['ping_207',['ping',['../class_duck_lora.html#af9312284784b8e32ed26a3448a1e8816',1,'DuckLora']]],
-  ['processportalrequest_208',['processPortalRequest',['../class_duck.html#a8fde44959e2ca108af1799f87f754336',1,'Duck']]]
+  ['imalive_302',['imAlive',['../class_duck.html#a9b5501043f7804263b391555f33aa986',1,'Duck']]],
+  ['isequal_303',['isEqual',['../namespaceduckutils.html#a73122238e9e6161a781b25f4a74cca44',1,'duckutils']]],
+  ['iswificonnected_304',['isWifiConnected',['../class_duck.html#a09149de412d44bc20792b6412e296c13',1,'Duck::isWifiConnected()'],['../class_duck_net.html#a393440e488e564a2269bdec8a218f1a2',1,'DuckNet::isWifiConnected()']]]
 ];
