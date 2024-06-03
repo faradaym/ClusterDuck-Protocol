@@ -63,8 +63,8 @@
 /// Frequency Range. Set for US Region 915.0Mhz
 #define CDPCFG_RF_LORA_FREQ 915.0
 #define CDPCFG_RF_LORA_FREQ_HZ 915000000
-/// Bandwidth. Default is 125Mhz
-#define CDPCFG_RF_LORA_BW 125.0
+/// Bandwidth. Default is 500Mhz
+#define CDPCFG_RF_LORA_BW 500.0
 /// Spread Factor
 #define CDPCFG_RF_LORA_SF 7
 /// Transmit Power
