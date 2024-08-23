@@ -58,7 +58,7 @@ jobs:
         # install the Heltec ESP32 and CubeCell boards
         if [[ "${{ matrix.board }}" =~ "esp32:esp32:" ]]; then
           echo "[ARDUINO SETUP] Installing the Heltec ESP32 board"
-          arduino-cli core install esp32:esp32:esp32@2.0.17 --additional-urls https://github.com/Heltec-Aaron-Lee/WiFi_Kit_series/releases/download/3.0.0/package_heltec_esp32_index.json
+          arduino-cli core install esp32:esp32@2.0.17 --additional-urls https://github.com/Heltec-Aaron-Lee/WiFi_Kit_series/releases/download/3.0.0/package_heltec_esp32_index.json
         fi
         if [[ "${{ matrix.board }}" =~ "CubeCell:CubeCell:" ]]; then
           echo "[ARDUINO SETUP] Installing the CubeCell board"
