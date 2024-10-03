@@ -15,6 +15,7 @@ const char home_page[] PROGMEM = R"=====(
 
     <a id="message-button" href="/main">Send A Message &#x1F4E9</a>
     <a href="/controlpanel">Control Panel &#x2699</a>
+    <a href="/atakChatPage">ATAK CHAT &#x2699</a>
 </div>
 </body>
 </html>
