@@ -30,7 +30,7 @@ void setup() {
   // given during the device provisioning then converted to a byte vector to
   // setup the duck NOTE: The Device ID must be exactly 8 bytes otherwise it
   // will get rejected
-  std::string deviceId("MAMA0001");
+  std::string deviceId("MAMA0002");
   std::vector<byte> devId;
   devId.insert(devId.end(), deviceId.begin(), deviceId.end());
   if (duck.setupWithDefaults(devId) != DUCK_ERR_NONE) {
