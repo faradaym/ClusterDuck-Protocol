@@ -7,13 +7,18 @@
 #include <vector>
 #include <arduino-timer.h>
 #include <CDP.h>
+#include <FS.h>
+#include <SPIFFS.h>
 
 #ifdef SERIAL_PORT_USBVIRTUAL
 #define Serial SERIAL_PORT_USBVIRTUAL
 #endif
 
+int totalPackets = 0;
 bool sendData(std::vector<byte> message);
 bool runSensor(void *);
+void logPacket(std::vector<byte> packetBuffer);
+
 
 // create a built-in mama duck
 MamaDuck duck;
@@ -38,6 +43,19 @@ void setup() {
     Serial.println("[MAMA] Failed to setup MamaDuck");
     return;
   }
+
+  if (!SPIFFS.begin(true)) {
+    Serial.println("Failed to mount SPIFFS");
+  }
+
+  File file = SPIFFS.open("/packetLogs.txt", FILE_WRITE);
+  if (!file) {
+    Serial.println("Failed to open file for writing");
+  } else {
+    file.println("START OF FILE");
+    file.close();
+  }
+  duck.onReceiveDuckData(logPacket);
 
   setupOK = true;
 
@@ -70,6 +88,19 @@ void loop() {
   duck.run();
 }
 
+void logPacket(std::vector<byte> packetBuffer){
+  totalPackets++;
+  File logFile = SPIFFS.open("/packetLogs.txt", FILE_APPEND);
+  if (!logFile) {
+    Serial.println("Failed to open file for appending");
+  } else {
+    logFile.print(totalPackets);
+    std::string packetStr = duckutils::toString(packetBuffer);
+    logFile.println(packetStr.c_str());
+    logFile.close();
+  }
+};
+
 bool runSensor(void *) {
   bool result;
   
@@ -88,6 +119,16 @@ bool runSensor(void *) {
 
 bool sendData(std::vector<byte> message) {
   bool sentOk = false;
+  totalPackets++;
+  File logFile = SPIFFS.open("/packetLogs.txt", FILE_APPEND);
+  if (!logFile) {
+    Serial.println("Failed to open file for appending");
+  } else {
+    logFile.print(totalPackets);
+    std::string packetStr = duckutils::toString(message);
+    logFile.println(packetStr.c_str());
+    logFile.close();
+  }
   
   int err = duck.sendData(topics::status, message);
   if (err == DUCK_ERR_NONE) {

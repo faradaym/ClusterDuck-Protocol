@@ -1,4 +1,6 @@
 #include "include/DuckNet.h"
+#include <FS.h>
+#include <SPIFFS.h>
 
 DuckNet::DuckNet(BloomFilter *filter): bloomFilter(filter) {
 }
@@ -170,6 +172,13 @@ int DuckNet::setupWebServer(bool createCaptivePortal, std::string html) {
    request->send(200, "text/html", controlPanel);
    
  });
+ webServer.on("/dumpLogs", HTTP_GET, [](AsyncWebServerRequest* request) {
+  if (SPIFFS.exists("/packetLogs.txt")) {
+    request->send(SPIFFS, "/packetLogs.txt", "text/plain");
+  } else {
+    request->send(404, "text/plain", "Log file not found");
+  }
+});
 
   webServer.on("/changeSSID", HTTP_POST, [&](AsyncWebServerRequest* request) {
     int paramsNumber = request->params();

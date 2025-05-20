@@ -21,12 +21,16 @@
 DuckLink duck;
 bool sendSensorData();
 bool runSensor(void *);
+bool sendBurstPacket(void *);
+void scheduleNextPacket();
 // create a timer with default settings
 auto timer = timer_create_default();
 
 // for sending the counter message
-const int INTERVAL_MS = 30000;
+const int INTERVAL_MS = 5000;
 int counter = 1;
+int burstCount = 0;
+int burstSent = 0;  
 
 bool setupOK = false;
 
@@ -35,7 +39,7 @@ void setup() {
   // given during the device provisioning then converted to a byte vector to
   // setup the duck NOTE: The Device ID must be exactly 8 bytes otherwise it
   // will get rejected
-  std::string deviceId("DUCK0001");
+  std::string deviceId("BURSTLNK");
   std::array<byte,8> devId;
   int rc;
   std::copy(deviceId.begin(), deviceId.end(), devId.begin());
@@ -99,5 +103,29 @@ bool sendSensorData() {
 }
 
 bool runSensor(void *) {
-  return sendSensorData();
+  burstCount = random(2, 6);
+  burstSent = 0;
+  Serial.print("[LINK] Starting burst of ");
+  Serial.print(burstCount);
+  Serial.println(" packets");
+
+  // Schedule first packet immediately
+  scheduleNextPacket();
+  return true;
+}
+
+void scheduleNextPacket() {
+  if (burstSent < burstCount) {
+    int delayMs = random(300, 1200);  // random delay between 100 and 1000 ms
+    timer.in(delayMs, sendBurstPacket);
+  }
+}
+
+// Timer callback to send one packet and schedule the next one
+bool sendBurstPacket(void *) {
+  std::array<byte,8> dduid = { 'M', 'A', 'M', 'A', '0', '0', '0', '1' };
+  int err = duck.sendData(topics::status, "Burst packet Hi", dduid);
+  burstSent++;
+  scheduleNextPacket();
+  return false; // one-shot timer, so return false
 }
