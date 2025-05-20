@@ -124,7 +124,8 @@ void scheduleNextPacket() {
 // Timer callback to send one packet and schedule the next one
 bool sendBurstPacket(void *) {
   std::array<byte,8> dduid = { 'M', 'A', 'M', 'A', '0', '0', '0', '1' };
-  int err = duck.sendData(topics::status, "Burst packet Hi", dduid);
+  std::string message = "Sending Burst Packet " + std::to_string(burstSent) + "|" + std::to_string(burstCount);
+  int err = duck.sendData(topics::status, message, dduid);
   burstSent++;
   scheduleNextPacket();
   return false; // one-shot timer, so return false

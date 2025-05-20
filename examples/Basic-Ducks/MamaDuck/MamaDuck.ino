@@ -27,7 +27,7 @@ MamaDuck duck;
 auto timer = timer_create_default();
 
 // for sending the counter message
-const int INTERVAL_MS = 60000;
+const int INTERVAL_MS = 1000 * 60 * 2;
 int counter = 1;
 bool setupOK = false;
 
@@ -36,7 +36,7 @@ void setup() {
   // given during the device provisioning then converted to a byte vector to
   // setup the duck NOTE: The Device ID must be exactly 8 bytes otherwise it
   // will get rejected
-  std::string deviceId("MAMA0001");
+  std::string deviceId("MAMA0002");
   std::array<byte,8> devId;
   std::copy(deviceId.begin(), deviceId.end(), devId.begin());
   if (duck.setupWithDefaults(devId) != DUCK_ERR_NONE) {
