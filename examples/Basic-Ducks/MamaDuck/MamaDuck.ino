@@ -95,8 +95,9 @@ void logPacket(std::vector<byte> packetBuffer){
     Serial.println("Failed to open file for appending");
   } else {
     logFile.print(totalPackets);
-    std::string packetStr = duckutils::toString(packetBuffer);
-    logFile.println(packetStr.c_str());
+    CdpPacket cdp_packet = CdpPacket(packetBuffer);
+    std::string payload(cdp_packet.data.begin(), cdp_packet.data.end());
+    logFile.println(payload.c_str());
     logFile.close();
   }
 };
