@@ -109,6 +109,11 @@ jobs:
           BOARD=${{ matrix.board }}
           echo "Building $1/$2/$2.ino..."
           arduino-cli compile -v -t -b ${{ matrix.board }} $PWD/examples/$1/$2/$2.ino > ${BOARD##*:}-$2-build.log 2>&1; 
+          -I $PWD/src/include \
+          -I $PWD/src/DuckNet \
+          -I $PWD/src/Ducks \
+          -I $PWD/src/utils \
+          -I $PWD/src/src \
           echo "Build complete."
         } 
         buildExampleSketch Basic-Ducks DuckLink
