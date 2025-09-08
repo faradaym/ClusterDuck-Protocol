@@ -149,7 +149,7 @@ private :
                   //Serialize the updated RREQ packet
                   std::string strRREP;
                   serializeJson(rreqDoc, strRREP);
-                  rxPacket.rawBuffer() = duckutils::stringToByteVector(strRREP);
+                  rxPacket.rawBuffer() = duckutils::stringToByteVector(strRREP); //how does this compile?
                   err = this->duckRadio.relayPacket(rxPacket);
                   if (err != DUCK_ERR_NONE) {
                       logerr_ln("====> ERROR handleReceivedPacket failed to relay. rc = %d", err);
