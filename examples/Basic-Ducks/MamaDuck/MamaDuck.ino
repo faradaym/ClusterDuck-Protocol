@@ -9,7 +9,7 @@
 #define SDA_PIN      21
 #define SCL_PIN      22
 #define SMOOTH_N     2
-#define INTERVAL_MS  300
+#define INTERVAL_MS  1000
 
 // --- Topic IDs (Safe Zone) ---
 #define TOPIC_SENSOR1 0x31
