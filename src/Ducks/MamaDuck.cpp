@@ -53,7 +53,6 @@ void MamaDuck::run() {
     handleReceivedPacket();
     rxPacket->reset();
   }
-  processPortalRequest();
 }
 
 void MamaDuck::handleReceivedPacket() {

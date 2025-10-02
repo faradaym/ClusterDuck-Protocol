@@ -41,5 +41,4 @@ void DuckLink::run() {
 
   duckRadio.serviceInterruptFlags();
 
-  processPortalRequest();
 }
