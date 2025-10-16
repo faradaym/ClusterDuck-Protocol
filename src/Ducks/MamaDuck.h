@@ -37,7 +37,7 @@ private :
      * Could be a RREQ, RREP, PING, PONG or DATA packet on its associated topic.
      *
      */
-    void handleReceivedPacket() override{
+    void handleReceivedPacket() override {
     if (this->duckRadio.getReceiveFlag()){
         bool relay = false;
         
@@ -63,10 +63,6 @@ private :
 
         // recvDataCallback(rxPacket.asBytes());
         loginfo_ln("handleReceivedPacket: packet RELAY START");
-        // NOTE:
-        // Ducks will only handle received message one at a time, so there is a chance the
-        // packet being sent below will never be received, especially if the cluster is small
-        // there are not many alternative paths to reach other mama ducks that could relay the rxPacket.
         
         //Check if Duck is desitination for this packet before relaying
         if (duckutils::isEqual(BROADCAST_DUID, rxPacket.dduid)) {
@@ -90,7 +86,6 @@ private :
                 RouteJSON rreqDoc = RouteJSON(rxPacket.asBytes());
                 std::string rreq = rreqDoc.addToPath(this->deviceId);
                 this->sendRouteResponse(rxPacket.sduid, rreq);
-                //update routing table with sduid
             }
             case reservedTopic::ping:
                 loginfo_ln("PING received. Sending PONG!");
@@ -123,22 +118,13 @@ private :
     }
 
     void ifNotBroadcast(CdpPacket rxPacket, int err, bool relay = false) {
-        std::vector<uint8_t> dataPayload;
-        uint8_t num = 1;
 
         switch(rxPacket.topic) {
             case reservedTopic::rreq: {
                 RouteJSON rreqDoc = RouteJSON(rxPacket.asBytes());
                 if(!relay) {
-                    loginfo_ln("RREQ received. Updating RREQ!");
-
                     loginfo_ln("handleReceivedPacket: Sending RREP");
-                    //add current duck to path
-                    //update the rreq to make it into a rrep
-                    //Serialize the updated RREQ packet
-                    std::string strRREP = rreqDoc.addToPath(this->deviceId);
-                    this->sendRouteResponse(PAPADUCK_DUID,
-                                            dataPayload); //was this meant to be prepareforsending an rxPacket instead txPacket?
+                    this->sendRouteResponse(rreqDoc.getlastInPath(), rreqDoc.asString()); 
                     return;
                 } else {
                     loginfo_ln("RREQ received for relay. Relaying!");
