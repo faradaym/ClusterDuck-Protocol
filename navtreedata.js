@@ -27,9 +27,10 @@ var NAVTREE =
   [ "ClusterDuck Protocol", "index.html", [
     [ "ClusterDuck Protocol Info", "index.html", "index" ],
     [ "Adding Your Own Board", "md__2home_2runner_2work_2_cluster_duck-_protocol_2_cluster_duck-_protocol_2src_2include_2boards_2_r_e_a_d_m_e.html", [
-      [ "Board Format", "md__2home_2runner_2work_2_cluster_duck-_protocol_2_cluster_duck-_protocol_2src_2include_2boards_2_r_e_a_d_m_e.html#autotoc_md1", null ],
-      [ "Defining the Pins", "md__2home_2runner_2work_2_cluster_duck-_protocol_2_cluster_duck-_protocol_2src_2include_2boards_2_r_e_a_d_m_e.html#autotoc_md2", null ],
-      [ "Adding the Board Header", "md__2home_2runner_2work_2_cluster_duck-_protocol_2_cluster_duck-_protocol_2src_2include_2boards_2_r_e_a_d_m_e.html#autotoc_md3", null ]
+      [ "Supported Boards", "md__2home_2runner_2work_2_cluster_duck-_protocol_2_cluster_duck-_protocol_2src_2include_2boards_2_r_e_a_d_m_e.html#autotoc_md1", null ],
+      [ "Board Format", "md__2home_2runner_2work_2_cluster_duck-_protocol_2_cluster_duck-_protocol_2src_2include_2boards_2_r_e_a_d_m_e.html#autotoc_md2", null ],
+      [ "Defining the Pins", "md__2home_2runner_2work_2_cluster_duck-_protocol_2_cluster_duck-_protocol_2src_2include_2boards_2_r_e_a_d_m_e.html#autotoc_md3", null ],
+      [ "Adding the Board Header", "md__2home_2runner_2work_2_cluster_duck-_protocol_2_cluster_duck-_protocol_2src_2include_2boards_2_r_e_a_d_m_e.html#autotoc_md4", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -42,10 +43,12 @@ var NAVTREE =
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
+      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", null ],
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
+        [ "Typedefs", "functions_type.html", null ],
         [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ],
@@ -53,6 +56,7 @@ var NAVTREE =
       [ "File List", "files.html", "files_dup" ],
       [ "File Members", "globals.html", [
         [ "All", "globals.html", null ],
+        [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
         [ "Enumerations", "globals_enum.html", null ],
         [ "Enumerator", "globals_eval.html", null ],
@@ -64,8 +68,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_duck_8cpp.html",
-"heltec__wifi__lora__32___v3_8h_source.html"
+"_detector_duck_8h.html",
+"class_duck_router.html#a676d4c6e29c1803f5970daafb2067193"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
