@@ -28,6 +28,13 @@ class Duck {
      * @brief Duck main running loop
      */
     void run(){
+      if(router.getNetworkState() == NetworkState::SEARCHING){
+        Serial.println("SEARCHING STATE");
+      } else if(router.getNetworkState() == NetworkState::PUBLIC){
+        Serial.println("PUBLIC STATE");
+      }else if(router.getNetworkState() == NetworkState::DISCONNECTED){
+        Serial.println("DISCONNECTG STATE");
+      }
       duckRadio.serviceInterruptFlags();
       Duck::logIfLowMemory();
       if(router.getNetworkState() == NetworkState::PUBLIC) {
