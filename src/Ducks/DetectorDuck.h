@@ -2,13 +2,14 @@
 #define DETECTORDUCK_H
 
 #include "Duck.h"
+#include "../wifi/DuckWifi.h"
 
-template <typename WifiCapability = DuckWifiNone, typename RadioType = DuckLoRa>
-class DetectorDuck : public Duck<DuckWifiNone, RadioType> {
+template <typename WifiCapability = DuckWifi, typename RadioType = DuckLoRa>
+class DetectorDuck : public Duck<DuckWifi, RadioType> {
 public:
   using Duck<WifiCapability, RadioType>::Duck;
 
-  DetectorDuck(std::string name = "DETECTOR") : Duck<DuckWifiNone, RadioType>(std::move(name)) {}
+  DetectorDuck(std::string name = "DETECTOR") : Duck<DuckWifi, RadioType>(std::move(name)) {}
   ~DetectorDuck() {}
 
   /// callback definition for receiving RSSI value
