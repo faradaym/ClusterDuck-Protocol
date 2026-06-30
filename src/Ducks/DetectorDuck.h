@@ -39,9 +39,18 @@ private:
       logdbg("run() - got ping response!");
       CdpPacket signalDataPacket = rxPacket;
 
+      float tRssi = this->duckRadio.getRSSI();
+      float tSnr = this->duckRadio.getSNR();
       JsonDocument doc;
-      doc["rssi"] = this->duckRadio.getRSSI();
-      doc["snr"] = this->duckRadio.getSNR();
+      doc["rssi"] = tRssi;
+      doc["snr"] = tSnr;
+
+      int signalScore; //1-10
+      float normalizedRssi = (tRssi - RSSI_MIN)/(RSSI_MAX-RSSI_MIN);
+      float normalizedSnr = (tSnr - SNR_MIN)/(SNR_MAX-SNR_MIN);
+      signalScore = ((normalizedRssi + normalizedSnr) / 2.0f) * 10;
+
+      doc["signalScore"] = signalScore;
 
       std::string jsonString;
       serializeJson(doc, jsonString);
