@@ -1,189 +1,189 @@
-#ifndef PAPADUCK_H
-#define PAPADUCK_H
+// #ifndef PAPADUCK_H
+// #define PAPADUCK_H
 
-#include "Duck.h"
-#include "../wifi/DuckWifi.h"
+// #include "Duck.h"
+// #include "../wifi/DuckWifi.h"
 
-template <typename WifiCapability = DuckWifi, typename RadioType = DuckLoRa>
-class PapaDuck : public Duck<WifiCapability, RadioType> {
-public:
-  using Duck<WifiCapability, RadioType>::Duck;
+// template <typename WifiCapability = DuckWifi, typename RadioType = DuckLoRa>
+// class PapaDuck : public Duck<WifiCapability, RadioType> {
+// public:
+//   using Duck<WifiCapability, RadioType>::Duck;
   
-  PapaDuck(std::string name = "PAPADUCK") : Duck<WifiCapability, RadioType>(std::move(name)) {}
-  ~PapaDuck() {}
+//   PapaDuck(std::string name = "PAPADUCK") : Duck<WifiCapability, RadioType>(std::move(name)) {}
+//   ~PapaDuck() {}
 
-  /// Papa Duck callback functions signature.
-  using rxDoneCallback = void (*)(CdpPacket data);
-  using txDoneCallback = void (*)(void);
-  /**
-   * @brief Register callback for handling data received from duck devices
-   * 
-   * The callback will be invoked if the packet needs to be relayed (i.e not seen before)
-   * @param cb a callback to handle data received by the papa duck
-   */
-  void onReceiveDuckData(rxDoneCallback cb) { this->recvDataCallback = cb; }
+//   /// Papa Duck callback functions signature.
+//   using rxDoneCallback = void (*)(CdpPacket data);
+//   using txDoneCallback = void (*)(void);
+//   /**
+//    * @brief Register callback for handling data received from duck devices
+//    * 
+//    * The callback will be invoked if the packet needs to be relayed (i.e not seen before)
+//    * @param cb a callback to handle data received by the papa duck
+//    */
+//   void onReceiveDuckData(rxDoneCallback cb) { this->recvDataCallback = cb; }
 
-  /**
-   * @brief Get the DuckType
-   *
-   * @returns the duck type defined as DuckType
-   */
-  DuckType getType() { return DuckType::PAPA; }
+//   /**
+//    * @brief Get the DuckType
+//    *
+//    * @returns the duck type defined as DuckType
+//    */
+//   DuckType getType() { return DuckType::PAPA; }
 
-  //remove this when mqtt quack pack is added
-  bool isWifiConnected(){
-    return this->duckWifi.connected();
-  }
+//   //remove this when mqtt quack pack is added
+//   bool isWifiConnected(){
+//     return this->duckWifi.connected();
+//   }
 
-  bool muidNotReceived(Muid muid){
-   return this->router.getFilter().bloom_check(muid.data(), MUID_LENGTH) == 0;
-  }
+//   bool muidNotReceived(Muid muid){
+//    return this->router.getFilter().bloom_check(muid.data(), MUID_LENGTH) == 0;
+//   }
 
-private:
-  rxDoneCallback recvDataCallback;
+// private:
+//   rxDoneCallback recvDataCallback;
   
-  void handleReceivedPacket(CdpPacket rxPacket) {
-    loginfo_ln("====> handleReceivedPacket: START");
+//   void handleReceivedPacket(CdpPacket rxPacket) {
+//     loginfo_ln("====> handleReceivedPacket: START");
     
-    if (recvDataCallback) recvDataCallback(rxPacket);
+//     if (recvDataCallback) recvDataCallback(rxPacket);
 
-    //Check if Duck is desitination for this packet before relaying
-    if (duckutils::isEqual(BROADCAST_DUID, rxPacket.dduid)) {
-        ifBroadcast(rxPacket);
-    } else if(duckutils::isEqual(this->duid, rxPacket.dduid) || duckutils::isEqual(rxPacket.dduid, PAPADUCK_DUID)) { //Target device check
-        ifNotBroadcast(rxPacket);
-    } else { //If it's meant for a specific target but not this one
-        ifNotBroadcast(rxPacket, true);
-    }
-    this->router.getFilter().bloom_add(rxPacket.muid.data(), MUID_LENGTH);
-  } 
+//     //Check if Duck is desitination for this packet before relaying
+//     if (duckutils::isEqual(BROADCAST_DUID, rxPacket.dduid)) {
+//         ifBroadcast(rxPacket);
+//     } else if(duckutils::isEqual(this->duid, rxPacket.dduid) || duckutils::isEqual(rxPacket.dduid, PAPADUCK_DUID)) { //Target device check
+//         ifNotBroadcast(rxPacket);
+//     } else { //If it's meant for a specific target but not this one
+//         ifNotBroadcast(rxPacket, true);
+//     }
+//     this->router.getFilter().bloom_add(rxPacket.muid.data(), MUID_LENGTH);
+//   } 
 
-  void ifBroadcast(CdpPacket rxPacket) { 
-    int err;
-    switch(rxPacket.topic) {
-        case reservedTopic::rreq: {
-            if(rxPacket.hopCount <= 0){
-                loginfo_ln("RREQ received from %s. Sending Response!", rxPacket.sduid.data());
-                RouteJSON rrepDoc = RouteJSON(rxPacket.sduid, PAPADUCK_DUID);
-                rrepDoc.addToPath(PAPADUCK_DUID);
-                this->sendRouteResponse(rxPacket.sduid, rrepDoc.asString());
-                // Update routing table with signal info
-                this->router.insertIntoRoutingTable(rxPacket.sduid, rxPacket.sduid, this->getSignalScore()); //can only be one hop away
-            }
-            break;
-        }
-        case reservedTopic::ping:
-            loginfo_ln("PING received. Sending PONG!");
-            err = this->sendPong();
-            if (err != DUCK_ERR_NONE) {
-                logerr_ln("ERROR failed to send pong message. rc = %d",err);
-            }
-            break;
-        case reservedTopic::pong:
-            loginfo_ln("PONG received. Ignoring!");
-            break;
-        // case reservedTopic::cmd:
-        //     loginfo_ln("Command received");
+//   void ifBroadcast(CdpPacket rxPacket) { 
+//     int err;
+//     switch(rxPacket.topic) {
+//         case reservedTopic::rreq: {
+//             if(rxPacket.hopCount <= 0){
+//                 loginfo_ln("RREQ received from %s. Sending Response!", rxPacket.sduid.data());
+//                 RouteJSON rrepDoc = RouteJSON(rxPacket.sduid, PAPADUCK_DUID);
+//                 rrepDoc.addToPath(PAPADUCK_DUID);
+//                 this->sendRouteResponse(rxPacket.sduid, rrepDoc.asString());
+//                 // Update routing table with signal info
+//                 this->router.insertIntoRoutingTable(rxPacket.sduid, rxPacket.sduid, this->getSignalScore()); //can only be one hop away
+//             }
+//             break;
+//         }
+//         case reservedTopic::ping:
+//             loginfo_ln("PING received. Sending PONG!");
+//             err = this->sendPong();
+//             if (err != DUCK_ERR_NONE) {
+//                 logerr_ln("ERROR failed to send pong message. rc = %d",err);
+//             }
+//             break;
+//         case reservedTopic::pong:
+//             loginfo_ln("PONG received. Ignoring!");
+//             break;
+//         // case reservedTopic::cmd:
+//         //     loginfo_ln("Command received");
 
-        //     err = this->broadcastPacket(rxPacket);
+//         //     err = this->broadcastPacket(rxPacket);
             
-        //     if (err != DUCK_ERR_NONE) {
-        //         logerr_ln("====> ERROR handleReceivedPacket failed to relay. rc = %d",err);
-        //     } else {
-        //         loginfo_ln("handleReceivedPacket: packet RELAY DONE");
-        //     }
-        //     break;
-        default:
-            err = this->broadcastPacket(rxPacket);
-            if (err != DUCK_ERR_NONE) {
-                logerr_ln("====> ERROR handleReceivedPacket failed to relay. rc = %d",err);
-            } else {
-                loginfo_ln("handleReceivedPacket: packet RELAY DONE");
-            }
-    }
-}
+//         //     if (err != DUCK_ERR_NONE) {
+//         //         logerr_ln("====> ERROR handleReceivedPacket failed to relay. rc = %d",err);
+//         //     } else {
+//         //         loginfo_ln("handleReceivedPacket: packet RELAY DONE");
+//         //     }
+//         //     break;
+//         default:
+//             err = this->broadcastPacket(rxPacket);
+//             if (err != DUCK_ERR_NONE) {
+//                 logerr_ln("====> ERROR handleReceivedPacket failed to relay. rc = %d",err);
+//             } else {
+//                 loginfo_ln("handleReceivedPacket: packet RELAY DONE");
+//             }
+//     }
+// }
 
-void ifNotBroadcast(CdpPacket rxPacket, bool relay = false) {
-    int err;
-    switch(rxPacket.topic) {
-        case reservedTopic::rreq: {
-            RouteJSON rreqDoc = RouteJSON(rxPacket.data);
-            if (!rreqDoc.isValid()) {
-                logerr_ln("handleReceivedPacket: dropping malformed RREQ");
-                break;
-            }
-            //route requests are just forwarded so we can use the sduid as the origin
-            std::optional<Duid> last = rreqDoc.getlastInPath();
-            Duid lastInPath = last.has_value() ? last.value() : rxPacket.sduid;
-            if(!relay) {
-                loginfo_ln("handleReceivedPacket: Sending RREP");
-                rxPacket.data = duckutils::stringToByteVector(rreqDoc.convertReqToRep());
-                this->sendRouteResponse(lastInPath, rreqDoc.asString());
-            } else {
-                rxPacket.data = duckutils::stringToByteVector(rreqDoc.addToPath(this->duid)); //why is this different from stringToArray -- should this be PAPADUCK_DUID?
-                err = this->forwardPacket(rxPacket);
-                if (err != DUCK_ERR_NONE) {
-                    logerr_ln("====> ERROR handleReceivedPacket failed to relay RREQ. rc = %d",err);
-                } else {
-                    loginfo_ln("handleReceivedPacket: RREQ packet RELAY DONE");
-                }
-            }
-        }
-        break;
+// void ifNotBroadcast(CdpPacket rxPacket, bool relay = false) {
+//     int err;
+//     switch(rxPacket.topic) {
+//         case reservedTopic::rreq: {
+//             RouteJSON rreqDoc = RouteJSON(rxPacket.data);
+//             if (!rreqDoc.isValid()) {
+//                 logerr_ln("handleReceivedPacket: dropping malformed RREQ");
+//                 break;
+//             }
+//             //route requests are just forwarded so we can use the sduid as the origin
+//             std::optional<Duid> last = rreqDoc.getlastInPath();
+//             Duid lastInPath = last.has_value() ? last.value() : rxPacket.sduid;
+//             if(!relay) {
+//                 loginfo_ln("handleReceivedPacket: Sending RREP");
+//                 rxPacket.data = duckutils::stringToByteVector(rreqDoc.convertReqToRep());
+//                 this->sendRouteResponse(lastInPath, rreqDoc.asString());
+//             } else {
+//                 rxPacket.data = duckutils::stringToByteVector(rreqDoc.addToPath(this->duid)); //why is this different from stringToArray -- should this be PAPADUCK_DUID?
+//                 err = this->forwardPacket(rxPacket);
+//                 if (err != DUCK_ERR_NONE) {
+//                     logerr_ln("====> ERROR handleReceivedPacket failed to relay RREQ. rc = %d",err);
+//                 } else {
+//                     loginfo_ln("handleReceivedPacket: RREQ packet RELAY DONE");
+//                 }
+//             }
+//         }
+//         break;
       
-        case reservedTopic::rrep: {
-            //we still need to recieve rreps in case of ttl expiry
-            RouteJSON rrepDoc = RouteJSON(rxPacket.data);
-            if (!rrepDoc.isValid()) {
-                logerr_ln("handleReceivedPacket: dropping malformed RREP");
-                break;
-            }
-            std::optional<Duid> last = rrepDoc.getlastInPath();
-            Duid lastInPath = last.has_value() ? last.value() : rxPacket.sduid;
-            std::string sourceDuid(rxPacket.sduid.begin(), rxPacket.sduid.end());
-            loginfo_ln("Received Route Response from DUID: %s", sourceDuid.c_str());
+//         case reservedTopic::rrep: {
+//             //we still need to recieve rreps in case of ttl expiry
+//             RouteJSON rrepDoc = RouteJSON(rxPacket.data);
+//             if (!rrepDoc.isValid()) {
+//                 logerr_ln("handleReceivedPacket: dropping malformed RREP");
+//                 break;
+//             }
+//             std::optional<Duid> last = rrepDoc.getlastInPath();
+//             Duid lastInPath = last.has_value() ? last.value() : rxPacket.sduid;
+//             std::string sourceDuid(rxPacket.sduid.begin(), rxPacket.sduid.end());
+//             loginfo_ln("Received Route Response from DUID: %s", sourceDuid.c_str());
 
-            std::optional<Duid> nextHop = this->router.getBestNextHop(rrepDoc.getDestination());
-            if((rrepDoc.getDestination() != this->duid) && (nextHop.has_value()) && (nextHop.value() !=  rxPacket.sduid)){ //and not papaduck_duid?
-                rrepDoc.popFromPath();
-                rrepDoc.addToPath(this->duid); //PAPADUCK_DUID?
-                //route responses need a way to keep tray of who relayed the packet, but a response needs to be directed and not broadly relayed
-                this->sendRouteResponse(rrepDoc.getDestination(), rrepDoc.asString()); //so here the "relaying" duck is known from sduid
-                this->router.insertIntoRoutingTable(rxPacket.sduid, lastInPath, this->getSignalScore());
-            } else {
-                //destination = sender of the rrep -> the last hop to current duck
-                this->router.insertIntoRoutingTable(rrepDoc.getOrigin(), lastInPath, this->getSignalScore());
-            }
-        }
-            break;
-        case reservedTopic::ping:
-            loginfo_ln("PING received. Sending PONG!");
-            err = this->sendPong();
-            if (err != DUCK_ERR_NONE) {
-                logerr_ln("ERROR failed to send pong message. rc = %d",err);
-            }
-            break;
-        case reservedTopic::pong:
-            loginfo_ln("PONG received. Ignoring!");
-            break;
-        // case reservedTopic::cmd:
-        //     loginfo_ln("Command received");
+//             std::optional<Duid> nextHop = this->router.getBestNextHop(rrepDoc.getDestination());
+//             if((rrepDoc.getDestination() != this->duid) && (nextHop.has_value()) && (nextHop.value() !=  rxPacket.sduid)){ //and not papaduck_duid?
+//                 rrepDoc.popFromPath();
+//                 rrepDoc.addToPath(this->duid); //PAPADUCK_DUID?
+//                 //route responses need a way to keep tray of who relayed the packet, but a response needs to be directed and not broadly relayed
+//                 this->sendRouteResponse(rrepDoc.getDestination(), rrepDoc.asString()); //so here the "relaying" duck is known from sduid
+//                 this->router.insertIntoRoutingTable(rxPacket.sduid, lastInPath, this->getSignalScore());
+//             } else {
+//                 //destination = sender of the rrep -> the last hop to current duck
+//                 this->router.insertIntoRoutingTable(rrepDoc.getOrigin(), lastInPath, this->getSignalScore());
+//             }
+//         }
+//             break;
+//         case reservedTopic::ping:
+//             loginfo_ln("PING received. Sending PONG!");
+//             err = this->sendPong();
+//             if (err != DUCK_ERR_NONE) {
+//                 logerr_ln("ERROR failed to send pong message. rc = %d",err);
+//             }
+//             break;
+//         case reservedTopic::pong:
+//             loginfo_ln("PONG received. Ignoring!");
+//             break;
+//         // case reservedTopic::cmd:
+//         //     loginfo_ln("Command received");
 
-        //     err = this->broadcastPacket(rxPacket);
+//         //     err = this->broadcastPacket(rxPacket);
             
-        //     if (err != DUCK_ERR_NONE) {
-        //         logerr_ln("====> ERROR handleReceivedPacket failed to relay. rc = %d",err);
-        //     } else {
-        //         loginfo_ln("handleReceivedPacket: packet RELAY DONE");
-        //     }
-        //     break;
-        default:
-          if(relay){
-            this->forwardPacket(rxPacket);
-          }               
-    }
-  }
+//         //     if (err != DUCK_ERR_NONE) {
+//         //         logerr_ln("====> ERROR handleReceivedPacket failed to relay. rc = %d",err);
+//         //     } else {
+//         //         loginfo_ln("handleReceivedPacket: packet RELAY DONE");
+//         //     }
+//         //     break;
+//         default:
+//           if(relay){
+//             this->forwardPacket(rxPacket);
+//           }               
+//     }
+//   }
 
-};
+// };
 
-#endif
+// #endif
